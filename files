@@ -1,0 +1,46 @@
+/*
+ * Yoast function collection
+ */
+
+// remove yoast html comments
+add_filter( 'wpseo_debug_markers', '__return_false' );
+
+// Remove yoast scheme
+add_filter( 'wpseo_json_ld_output', '__return_false' );
+
+// remove yoast breadcrumb title
+add_filter('wpseo_breadcrumb_single_link', 'remove_breadcrumb_title' );
+function remove_breadcrumb_title( $link_output) {
+  if ( strpos( $link_output, 'breadcrumb_last' ) !== false ) {
+      $link_output = '';
+  }
+  return $link_output;
+}
+
+// Remove yoast modified time
+add_filter('wpseo_frontend_presenter_classes', function ( $filter ) {
+  if (($key = array_search('Yoast\WP\SEO\Presenters\Open_Graph\Article_Modified_Time_Presenter', $filter)) !== false) {
+    unset($filter[$key]);
+  }
+  return $filter;
+  }
+);
+
+// Remove yoast published time
+add_filter('wpseo_frontend_presenter_classes', function ( $filter ) {
+  if (($key = array_search('Yoast\WP\SEO\Presenters\Open_Graph\Article_Published_Time_Presenter', $filter)) !== false) {
+    unset($filter[$key]);
+  }
+  return $filter;
+  }
+);
+
+// Add custom title by category ID into yoast json-ld
+add_filter( 'wpseo_schema_article', 'add_custom_title_post' );
+function add_custom_title_post( $data ) {
+  if (in_category(2)) { // 2 is your cat ID
+  $add_title = prefix_get_custom_cat();
+  $data['headline'] = 'My Custom Title '.$add_title.' '. get_the_title(); // change My Custom Title with your own
+  }
+  return $data;
+}
