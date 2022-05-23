@@ -1,4 +1,4 @@
-# yoast-function
+# custom-yoast-function
 yoast function collection
 
 - remove yoast html comments
